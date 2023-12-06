@@ -1,0 +1,35 @@
+[server]
+
+# The server name
+# paper, velocity, waterfall
+project = "paper"
+
+# The server version
+# if you use always latest version, set "latest"
+version = "1.20.2"
+
+# The server build
+# if you use always latest build, set "latest"
+build = "latest"
+
+# file name of the server jar
+file = "server.jar"
+
+[java]
+# java command
+command = "java"
+
+# memory size
+memory = "1G"
+
+[develop]
+# DEBUG mode
+# if you want to see the debug log, set true
+debug = false
+
+# log file
+logfile = "mcm.log"
+
+[database]
+# The database file
+name = "mcm.db"
