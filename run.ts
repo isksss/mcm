@@ -13,12 +13,19 @@ export async function start(config: Config) {
       config.server.file,
       "nogui",
     ],
+    
   });
 
   //   serverを実行する
   server.spawn();
 
   const { code, stdout, stderr } = await server.output();
-  
-  Logger.info("MC Server Started.");
+
+  //   show console stdout
+
+  if (code === 0) {
+    console.info(new TextDecoder().decode(stdout));
+  } else {
+    console.error(new TextDecoder().decode(stderr));
+  }
 }
