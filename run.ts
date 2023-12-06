@@ -13,13 +13,19 @@ export async function start(config: Config) {
       config.server.file,
       "nogui",
     ],
-    
+    stdin: "piped",
   });
 
   //   serverを実行する
-  server.spawn();
+  const process = server.spawn();
 
-  const { code, stdout, stderr } = await server.output();
+  const { code, stdout, stderr } = await process.output();
+
+  const writer = process.stdin.getWriter();
+
+  const stop_cmd = config.server.stop;
+  //   stop_cmdを実行する
+  writer.write(new TextEncoder().encode(stop_cmd));
 
   //   show console stdout
 
@@ -29,3 +35,4 @@ export async function start(config: Config) {
     console.error(new TextDecoder().decode(stderr));
   }
 }
+

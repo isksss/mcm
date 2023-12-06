@@ -13,6 +13,7 @@ export type Config = {
     version: string;
     build: string;
     file: string;
+    stop: string;
   };
   develop: {
     debug: boolean;

@@ -15,6 +15,9 @@ build = "latest"
 # file name of the server jar
 file = "server.jar"
 
+# stop command
+stop = "stop"
+
 [java]
 # java command
 command = "java"
