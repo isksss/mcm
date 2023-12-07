@@ -14,6 +14,7 @@ export type Config = {
     build: string;
     file: string;
     stop: string;
+    restart: number;
   };
   develop: {
     debug: boolean;
@@ -25,6 +26,10 @@ export type Config = {
   };
   database: {
     name: string;
+  };
+  discord: {
+    enable: boolean;
+    webhook_url: string;
   };
 };
 

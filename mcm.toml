@@ -18,6 +18,10 @@ file = "server.jar"
 # stop command
 stop = "stop"
 
+# restart time
+# 分単位
+restart = 5
+
 [java]
 # java command
 command = "java"
@@ -36,3 +40,7 @@ logfile = "mcm.log"
 [database]
 # The database file
 name = "mcm.db"
+
+[discord]
+enable = true
+webhook_url = "https://discord.com/api/webhooks/1182221233731944528/PoDbiq_953NtLSnRp2-dTPZxXwADm-yKUgT2_Jqag73ouJVJZNvThhFogdfNRiDvnoq8"

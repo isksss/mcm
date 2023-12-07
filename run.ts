@@ -19,20 +19,73 @@ export async function start(config: Config) {
   //   serverを実行する
   const process = server.spawn();
 
-  const { code, stdout, stderr } = await process.output();
-
   const writer = process.stdin.getWriter();
 
   const stop_cmd = config.server.stop;
-  //   stop_cmdを実行する
-  writer.write(new TextEncoder().encode(stop_cmd));
+  const restart_time = config.server.restart;
 
-  //   show console stdout
+  //  restart_time(分)をミリ秒に変換
+  const restart_time_ms = restart_time * 60 * 1000;
 
-  if (code === 0) {
-    console.info(new TextDecoder().decode(stdout));
-  } else {
-    console.error(new TextDecoder().decode(stderr));
+  //   一定時間経過後にprocessを終了する
+  Logger.info(`Stopping MC Server after ${restart_time} minutes...`);
+  setTimeout(() => {
+    writer.write(textEncode(stop_cmd + "\n"));
+  }, restart_time_ms);
+
+  // interval list
+  const interval_list = [];
+
+  // ログを出力する
+  const is_running_log = setInterval(async () => {
+    // 現在時刻を取得
+    const date = new Date();
+    const hour = date.getHours();
+    const minute = date.getMinutes();
+    const second = date.getSeconds();
+    await Logger.info(`[${hour}:${minute}:${second}] MC Server is running...`);
+  }, 10 * 60 * 1000);
+  interval_list.push(is_running_log);
+
+  // 5分ごとにサーバーにコマンドを送信する
+  const message_5m = setInterval(async () => {
+    const message = "say This server is powered by MCM !\n";
+    writer.write(textEncode(message));
+  }, 5 * 60 * 1000);
+  interval_list.push(message_5m);
+
+  // webhook
+  if (config.discord.enable) {
+    const url = config.discord.webhook_url;
+    const message = "MCM is running MC Server !\n";
+    sendWebhook(url, message);
   }
+
+  const { code } = await process.output();
+  writer.close();
+
+  // intervalを全てclearする
+  for (const interval of interval_list) {
+    clearInterval(interval);
+  }
+
+  Logger.debug(`MC Server exited with code ${code}`);
 }
 
+// textEncode function
+function textEncode(text: string) {
+  return new TextEncoder().encode(text);
+}
+
+// discord webhook
+function sendWebhook(url: string, message: string) {
+  fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      content: message,
+    }),
+  });
+}
