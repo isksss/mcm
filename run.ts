@@ -69,6 +69,10 @@ export async function start(config: Config) {
     clearInterval(interval);
   }
 
+  if (code !== 0) {
+    Logger.error("MC Server exited with code " + code);
+  }
+
   Logger.debug(`MC Server exited with code ${code}`);
 }
 
